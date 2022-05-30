@@ -1,0 +1,31 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <UserSecretsId>aspnet-CALENDAR_Version_3._0-3A157D3B-DD18-4937-BFF1-A1032A1B2EDD</UserSecretsId>
+    <RootNamespace>CALENDAR_Version_3._0</RootNamespace>
+    <CopyRefAssembliesToPublishDirectory>false</CopyRefAssembliesToPublishDirectory>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Data\Migrations\20220530094642_userevents.cs" />
+    <Compile Remove="Data\Migrations\20220530094642_userevents.Designer.cs" />
+    <Compile Remove="Data\Migrations\20220530094937_userevents.cs" />
+    <Compile Remove="Data\Migrations\20220530094937_userevents.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="3.1.22" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.25" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="3.1.25" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" Version="3.1.17" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.25" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.25">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="3.1.22" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.5" />
+  </ItemGroup>
+
+</Project>
