@@ -14,9 +14,9 @@ namespace CALENDAR_Version_3._0.Models.ViewModels
         public string LocationName { get; set; }
         public string UserId { get; set; }
 
-        public List<SelectListItem> ReminderFrequency = new List<SelectListItem>();
+       // public List<String> ReminderFrequency = new List<String>();
 
-        public string Reminder { get; set; }
+        public ReminderFrequency ReminderFrequency { get; set; }
 
         public EventViewModel(Event myevent, List<Location> locations, string userid)
         {
@@ -29,12 +29,12 @@ namespace CALENDAR_Version_3._0.Models.ViewModels
             }
 
             //Add reminder frequencies
-            ReminderFrequency.Add(new SelectListItem() { Text = "daily" });
-            ReminderFrequency.Add(new SelectListItem() { Text = "weekly" });
-            ReminderFrequency.Add(new SelectListItem() { Text = "monthly" });
-            ReminderFrequency.Add(new SelectListItem() { Text = "yearly" });
+            //ReminderFrequency.Add("daily");
+           // ReminderFrequency.Add("weekly");
+           // ReminderFrequency.Add("monthly");
+            //ReminderFrequency.Add("yearly");
 
-            Reminder = myevent.ReminderFrequency;
+            ReminderFrequency = myevent.reminderFrequency;
         }
 
         public EventViewModel(List<Location> locations, string userid)
@@ -46,10 +46,10 @@ namespace CALENDAR_Version_3._0.Models.ViewModels
             }
             
             //Add reminder frequencies
-            ReminderFrequency.Add(new SelectListItem() { Text = "daily" });
-            ReminderFrequency.Add(new SelectListItem() { Text = "weekly" });
-            ReminderFrequency.Add(new SelectListItem() { Text = "monthly" });
-            ReminderFrequency.Add(new SelectListItem() { Text = "yearly" });
+           // ReminderFrequency.Add(new SelectListItem() { Text = "daily" });
+           // ReminderFrequency.Add(new SelectListItem() { Text = "weekly" });
+           // ReminderFrequency.Add(new SelectListItem() { Text = "monthly" });
+           // ReminderFrequency.Add(new SelectListItem() { Text = "yearly" });
         }
 
         public EventViewModel()

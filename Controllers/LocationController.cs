@@ -5,6 +5,7 @@ using CALENDAR_Version_3._0.Data;
 using CALENDAR_Version_3._0.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 
 namespace CALENDAR_Version_3._0.Controllers
 {
@@ -27,7 +28,8 @@ namespace CALENDAR_Version_3._0.Controllers
             {
                 ViewData["Alert"] = TempData["Alert"];
             }
-            return View(_dal.GetLocations());
+            var userid = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            return View(_dal.GetMyLocations(userid));
         }
 
         // GET: Location/Details/5
@@ -60,10 +62,16 @@ namespace CALENDAR_Version_3._0.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Name")] Location location)
         {
+           
+
             if (ModelState.IsValid)
             {
                 try
                 {
+                    string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                    location.UserId = userId;
+
+
                     _dal.CreateLocation(location);
                     TempData["Alert"] = "Success! You created a location for: " + location.Name;
                     return RedirectToAction(nameof(Index));

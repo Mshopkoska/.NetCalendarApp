@@ -8,13 +8,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Data\Migrations\20220530094642_userevents.cs" />
-    <Compile Remove="Data\Migrations\20220530094642_userevents.Designer.cs" />
-    <Compile Remove="Data\Migrations\20220530094937_userevents.cs" />
-    <Compile Remove="Data\Migrations\20220530094937_userevents.Designer.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="MailKit" Version="3.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="3.1.22" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.25" />

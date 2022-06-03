@@ -6,5 +6,6 @@ namespace CALENDAR_Version_3._0.Models
     public class ApplicationUser : IdentityUser
     {
         public virtual ICollection<Event> Events { get; set; }
+        public virtual ICollection<Location> Locations { get; set; }
     }
 }

@@ -27,12 +27,11 @@ namespace CALENDAR_Version_3._0
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")).UseLazyLoadingProxies());
-            services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
+            services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = false)
                 .AddEntityFrameworkStores<ApplicationDbContext>();
             services.AddScoped<IDAL, DAL>();
 
             services.AddTransient<IEmailSender, EmailSender>();
-            //services.AddTransient<ISmsSender, AuthMessageSender>();
             services.Configure<AuthMessageSenderOptions>(Configuration);
 
             services.AddControllersWithViews();

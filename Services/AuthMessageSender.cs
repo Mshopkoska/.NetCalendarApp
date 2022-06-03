@@ -45,24 +45,7 @@ namespace CALENDAR_Version_3._0.Services
 
         public async Task Execute(string apiKey, string subject, string message, string toEmail)
         {
-            /*var client = new SendGridClient(apiKey);
-            var msg = new SendGridMessage()
-            {
-                From = new EmailAddress("Joe@contoso.com", "Password Recovery"),
-                Subject = subject,
-                PlainTextContent = message,
-                HtmlContent = message
-            };
-            msg.AddTo(new EmailAddress(toEmail));
-
-            // Disable click tracking.
-            // See https://sendgrid.com/docs/User_Guide/Settings/tracking.html
-            msg.SetClickTracking(false, false);
-            var response = await client.SendEmailAsync(msg);
-            _logger.LogInformation(response.IsSuccessStatusCode
-                                   ? $"Email to {toEmail} queued successfully!"
-                                   : $"Failure Email to {toEmail}");*/
-
+           
 
             using (var client = new SmtpClient())
             {
@@ -86,7 +69,7 @@ namespace CALENDAR_Version_3._0.Services
                 message2.To.Add(new MimeKit.MailboxAddress("Demo", toEmail));
                 message2.Subject = subject;
                 message2.Body = body.ToMessageBody();
-                ; var response = client.Send(message2);
+                var response = client.Send(message2);
 
                 client.Disconnect(true);
             }

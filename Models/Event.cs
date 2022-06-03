@@ -19,7 +19,7 @@ namespace CALENDAR_Version_3._0.Models
         [Required]
         public DateTime EndTime { get; set; }
         [Required]
-        public String ReminderFrequency { get; set; }
+        public ReminderFrequency reminderFrequency { get; set; }
 
         [Required]
         public int NTimesFrequency { get; set; }
@@ -27,39 +27,47 @@ namespace CALENDAR_Version_3._0.Models
         //Relational data
         [Required]
         public virtual Location Location { get; set; }
+        public string UserId { get; set; }
         public virtual ApplicationUser User { get; set; }
 
-        public Event(IFormCollection form, Location location, String ReminderFrequency, ApplicationUser user)
+        public Event(string Name, string Description, DateTime StartTime, DateTime EndTime, Location location, ReminderFrequency reminderFrequency, int NTimesFrequency, string UserId)
         {
-            User = user;
-            Name = form["Event.Name"].ToString();
-            Description = form["Event.Description"].ToString();
-            StartTime = DateTime.Parse(form["Event.StartTime"].ToString());
-            EndTime = DateTime.Parse(form["Event.EndTime"].ToString());
+            this.UserId = UserId;
+            this.Name = Name;
+            this.Description = Description;
+            this.StartTime = StartTime;
+            this.EndTime = EndTime;
 
-            this.ReminderFrequency = ReminderFrequency;
-            NTimesFrequency = int.Parse(form["Event.NTimesFrequency"].ToString());
+            this.reminderFrequency = reminderFrequency;
+            this.NTimesFrequency = NTimesFrequency;
 
             Location = location;
         }
 
-        public void UpdateEvent(IFormCollection form, Location location, String ReminderFrequency, ApplicationUser user)
+        public void UpdateEvent(string Name, string Description, DateTime StartTime, DateTime EndTime, Location location, ReminderFrequency reminderFrequency, int NTimesFrequency, ApplicationUser user)
         {
-            User = user;
-            Name = form["Event.Name"].ToString();
-            Description = form["Event.Description"].ToString();
-            StartTime = DateTime.Parse(form["Event.StartTime"].ToString());
-            EndTime = DateTime.Parse(form["Event.EndTime"].ToString());
+            this.UserId = UserId;
+            this.Name = Name;
+            this.Description = Description;
+            this.StartTime = StartTime;
+            this.EndTime = EndTime;
 
-            this.ReminderFrequency = ReminderFrequency;
-            NTimesFrequency = int.Parse(form["Event.NTimesFrequency"].ToString());
+            this.reminderFrequency = reminderFrequency;
+            this.NTimesFrequency = NTimesFrequency;
 
             Location = location;
         }
 
         public Event()
         {
-
         }
+    }
+
+    public enum ReminderFrequency
+    {
+        Daily = 0,
+        Weekly = 1,
+        Monthly = 2,
+        Yearly = 3
     }
 }

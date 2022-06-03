@@ -18,26 +18,23 @@ namespace CALENDAR_Version_3._0.Controllers.ActionFilters
 
         public override void OnActionExecuting(Microsoft.AspNetCore.Mvc.Filters.ActionExecutingContext context)
         {
-            if (context.RouteData.Values.ContainsKey("id"))
-            {
-                int id = int.Parse((string)context.RouteData.Values["id"]);
-                if (context.HttpContext.User != null)
-                {
-                    var username = context.HttpContext.User.Identity.Name;
-                    if (username != null)
-                    {
-                        var myevent = _dal.GetEvent(id);
-                        if (myevent.User != null)
-                        {
-                            if (myevent.User.UserName != username)
-                            {
-                                context.Result = new RedirectToRouteResult(new RouteValueDictionary(new { controller = "Home", action = "NotFound" }));
-                            }
-                        }
-                    }
+            // check if id is provided
+            if (!context.RouteData.Values.ContainsKey("id")) return;
+            int id = int.Parse((string)context.RouteData.Values["id"]);
 
-                }
-            }
+            // check if user is auth
+            if (context.HttpContext.User == null) return;
+            var username = context.HttpContext.User.Identity.Name;
+            if (username == null) return;
+
+            // get event
+            var myevent = _dal.GetEvent(id);
+            
+            // check if current user match with the event user
+            if (myevent.User == null) return;
+            if (myevent.User.UserName == username) return;
+
+            context.Result = new RedirectToRouteResult(new RouteValueDictionary(new { controller = "Home", action = "NotFound" }));
         }
     }
 }

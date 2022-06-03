@@ -1,9 +1,9 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace CALENDAR_Version_3._0.Data.Migrations
+namespace CALENDAR_Version_3._0.Migrations
 {
-    public partial class userevents : Migration
+    public partial class eventslocations : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -44,19 +44,6 @@ namespace CALENDAR_Version_3._0.Data.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Locations",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Locations", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -166,6 +153,27 @@ namespace CALENDAR_Version_3._0.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Locations",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(nullable: false),
+                    UserId = table.Column<string>(nullable: true),
+                    ApplicationUserId = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Locations", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Locations_AspNetUsers_ApplicationUserId",
+                        column: x => x.ApplicationUserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Events",
                 columns: table => new
                 {
@@ -175,7 +183,7 @@ namespace CALENDAR_Version_3._0.Data.Migrations
                     Description = table.Column<string>(nullable: false),
                     StartTime = table.Column<DateTime>(nullable: false),
                     EndTime = table.Column<DateTime>(nullable: false),
-                    ReminderFrequency = table.Column<string>(nullable: false),
+                    reminderFrequency = table.Column<int>(nullable: false),
                     NTimesFrequency = table.Column<int>(nullable: false),
                     LocationId = table.Column<int>(nullable: false),
                     UserId = table.Column<string>(nullable: true)
@@ -245,6 +253,11 @@ namespace CALENDAR_Version_3._0.Data.Migrations
                 name: "IX_Events_UserId",
                 table: "Events",
                 column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Locations_ApplicationUserId",
+                table: "Locations",
+                column: "ApplicationUserId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

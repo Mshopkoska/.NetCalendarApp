@@ -34,7 +34,7 @@ namespace CALENDAR_Version_3._0.Controllers
         public IActionResult MyCalendar()
         {
             var userid = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            ViewData["Resources"] = JSONListHelper.GetResourceListJSONString(_idal.GetLocations());
+            ViewData["Resources"] = JSONListHelper.GetResourceListJSONString(_idal.GetMyLocations(userid));
             ViewData["Events"] = JSONListHelper.GetEventListJSONString(_idal.GetMyEvents(userid));
             return View();
         }

@@ -7,11 +7,11 @@ using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
-namespace CALENDAR_Version_3._0.Data.Migrations
+namespace CALENDAR_Version_3._0.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20220530095115_userevents")]
-    partial class userevents
+    [Migration("20220603095055_userlocations")]
+    partial class userlocations
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -110,15 +110,14 @@ namespace CALENDAR_Version_3._0.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("ReminderFrequency")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<DateTime>("StartTime")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("UserId")
                         .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("reminderFrequency")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -136,11 +135,19 @@ namespace CALENDAR_Version_3._0.Data.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<string>("ApplicationUserId")
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("ApplicationUserId");
 
                     b.ToTable("Locations");
                 });
@@ -291,6 +298,13 @@ namespace CALENDAR_Version_3._0.Data.Migrations
                     b.HasOne("CALENDAR_Version_3._0.Models.ApplicationUser", "User")
                         .WithMany("Events")
                         .HasForeignKey("UserId");
+                });
+
+            modelBuilder.Entity("CALENDAR_Version_3._0.Models.Location", b =>
+                {
+                    b.HasOne("CALENDAR_Version_3._0.Models.ApplicationUser", null)
+                        .WithMany("Locations")
+                        .HasForeignKey("ApplicationUserId");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

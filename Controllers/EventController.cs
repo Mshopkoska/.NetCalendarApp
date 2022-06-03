@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
+using System.Linq;
 
 
 namespace CALENDAR_Version_3._0.Controllers
@@ -19,11 +20,13 @@ namespace CALENDAR_Version_3._0.Controllers
     {
         private readonly IDAL _dal;
         private readonly UserManager<ApplicationUser> _usermanager;
+        private readonly ApplicationDbContext _db;
 
-        public EventController(IDAL dal, UserManager<ApplicationUser> usermanager)
+        public EventController(IDAL dal, UserManager<ApplicationUser> usermanager, ApplicationDbContext db)
         {
             _dal = dal;
             _usermanager = usermanager;
+            _db = db;
         }
 
         // GET: Event
@@ -33,7 +36,8 @@ namespace CALENDAR_Version_3._0.Controllers
             {
                 ViewData["Alert"] = TempData["Alert"];
             }
-            return View(_dal.GetMyEvents(User.FindFirstValue(ClaimTypes.NameIdentifier)));
+            var userid = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            return View(_dal.GetMyEvents(userid));
         }
 
         // GET: Event/Details/5
@@ -57,7 +61,8 @@ namespace CALENDAR_Version_3._0.Controllers
 
         public IActionResult Create()
         {
-            return View(new EventViewModel(_dal.GetLocations(), User.FindFirstValue(ClaimTypes.NameIdentifier)));
+            var userid = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            return View(new EventViewModel(_dal.GetMyLocations(userid), userid));
         }
 
         // POST: Event/Create
@@ -68,17 +73,31 @@ namespace CALENDAR_Version_3._0.Controllers
 
         public async Task<IActionResult> Create(EventViewModel vm, IFormCollection form)
         {
-            try
-            {
-                _dal.CreateEvent(form);
+            
+                var name = form["Event.Name"].ToString();
+                var description = form["Event.Description"].ToString();
+                var startTime = DateTime.Parse(form["Event.StartTime"].ToString());
+                var endTime = DateTime.Parse(form["Event.EndTime"].ToString());
+                var userid = form["UserId"].ToString();
+
+                var locname = form["Location"].ToString();
+                var location = _dal.GetLocation(locname);
+
+                ReminderFrequency rf = (ReminderFrequency) int.Parse(form["Event.reminderFrequency"]);
+                
+                
+
+                var NTimesFrequency = int.Parse(form["Event.NTimesFrequency"].ToString());
+
+                //var NTimesFrequency = int.Parse(form["Event.NTimesFrequency"].ToString());
+                //smeni go parametarot za reminder frequency
+                var newevent = new Event(name,description,startTime,endTime,location, rf, NTimesFrequency, userid);
+
+                _dal.CreateEvent(newevent);
                 TempData["Alert"] = "Success! You created a new event for: " + form["Event.Name"];
                 return RedirectToAction("Index");
-            }
-            catch (Exception ex)
-            {
-                ViewData["Alert"] = "An error occurred: " + ex.Message;
-                return View(vm);
-            }
+            
+            
         }
 
         // GET: Event/Edit/5
@@ -96,7 +115,8 @@ namespace CALENDAR_Version_3._0.Controllers
             {
                 return NotFound();
             }
-            var vm = new EventViewModel(@event, _dal.GetLocations(), User.FindFirstValue(ClaimTypes.NameIdentifier));
+            var userid = _usermanager.GetUserId(User);
+            var vm = new EventViewModel(@event, _dal.GetMyLocations(userid), userid);
             return View(vm);
         }
 
@@ -111,14 +131,34 @@ namespace CALENDAR_Version_3._0.Controllers
         {
             try
             {
-                _dal.UpdateEvent(form);
+
+                var locname = form["Location"].ToString();
+                var location = _db.Locations.FirstOrDefault(x => x.Name == locname);
+
+                
+                var reminderFrequency = form["ReminderFrequency"];
+                var NTimesFrequency = int.Parse(form["Event.NTimesFrequency"].ToString());
+                var name = form["Event.Name"].ToString();
+                var description = form["Event.Description"].ToString();
+                var startTime = DateTime.Parse(form["Event.StartTime"].ToString());
+                var endTime = DateTime.Parse(form["Event.EndTime"].ToString());
+
+                var eventid = int.Parse(form["Event.Id"]);
+                var myevent = _db.Events.FirstOrDefault(x => x.Id == eventid);
+                var user = _db.Users.FirstOrDefault(x => x.Id == form["UserId"].ToString());
+
+                myevent.UpdateEvent(name, description, startTime, endTime, location, Models.ReminderFrequency.Daily, NTimesFrequency, user);
+                
+
+                _dal.UpdateEvent(myevent);
                 TempData["Alert"] = "Success! You modified an event for: " + form["Event.Name"];
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
             {
                 ViewData["Alert"] = "An error occurred: " + ex.Message;
-                var vm = new EventViewModel(_dal.GetEvent(id), _dal.GetLocations(), User.FindFirstValue(ClaimTypes.NameIdentifier));
+                var userid = _usermanager.GetUserId(User);
+                var vm = new EventViewModel(_dal.GetEvent(id), _dal.GetMyLocations(userid), _usermanager.GetUserId(User));
                 return View(vm);
             }
         }
