@@ -1,23 +1,10 @@
-﻿using CALENDAR_Version_3._0.Services;
-using Microsoft.AspNetCore.Identity.UI.Services;
-using Microsoft.AspNetCore.Identity.UI.Services;
+﻿using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.Extensions.Options;
-using SendGrid;
-using SendGrid.Helpers.Mail;
 using System.Threading.Tasks;
-using SendGrid;
-using System.Net;
-using System.Configuration;
-using System.Diagnostics;
 using System;
-using Microsoft.AspNetCore.Identity.UI.Services;
-using Microsoft.Extensions.Options;
-using SendGrid;
-using SendGrid.Helpers.Mail;
 using Microsoft.Extensions.Logging;
-using MailKit;
+
 using MailKit.Net.Smtp;
-using MailKit.Security;
 
 namespace CALENDAR_Version_3._0.Services
 {
@@ -45,8 +32,6 @@ namespace CALENDAR_Version_3._0.Services
 
         public async Task Execute(string apiKey, string subject, string message, string toEmail)
         {
-           
-
             using (var client = new SmtpClient())
             {
                 // For demo-purposes, accept all SSL certificates (in case the server supports STARTTLS)

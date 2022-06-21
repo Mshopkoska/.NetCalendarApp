@@ -185,6 +185,7 @@ namespace CALENDAR_Version_3._0.Migrations
                     EndTime = table.Column<DateTime>(nullable: false),
                     reminderFrequency = table.Column<int>(nullable: false),
                     NTimesFrequency = table.Column<int>(nullable: false),
+                    eventReminderDate = table.Column<DateTime>(nullable: false),
                     LocationId = table.Column<int>(nullable: false),
                     UserId = table.Column<string>(nullable: true)
                 },

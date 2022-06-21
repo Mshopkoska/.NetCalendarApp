@@ -1,16 +1,20 @@
-﻿using CALENDAR_Version_3._0.Models;
-using CALENDAR_Version_3._0.Data;
-using CALENDAR_Version_3._0.Models.ViewModels;
-using CALENDAR_Version_3._0.Controllers.ActionFilters;
-
-using System;
+﻿using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.Extensions.Logging;
 using System.Linq;
+using System.Collections.Generic;
+using CALENDAR_Version_3._0.Models;
+using CALENDAR_Version_3._0.Data;
+using CALENDAR_Version_3._0.Models.ViewModels;
+using CALENDAR_Version_3._0.Controllers.ActionFilters;
+using Microsoft.AspNetCore.Identity.UI.Services;
+
+
 
 
 namespace CALENDAR_Version_3._0.Controllers
@@ -21,12 +25,16 @@ namespace CALENDAR_Version_3._0.Controllers
         private readonly IDAL _dal;
         private readonly UserManager<ApplicationUser> _usermanager;
         private readonly ApplicationDbContext _db;
+        public IEmailSender _sender;
+        private readonly ILogger<EventController> _logger;
 
-        public EventController(IDAL dal, UserManager<ApplicationUser> usermanager, ApplicationDbContext db)
+        public EventController(IDAL _dal, UserManager<ApplicationUser> _usermanager, ApplicationDbContext _db, IEmailSender _sender, ILogger<EventController> _logger)
         {
-            _dal = dal;
-            _usermanager = usermanager;
-            _db = db;
+            this._dal = _dal;
+            this._usermanager = _usermanager;
+            this._db = _db;
+            this._sender = _sender;
+            this._logger = _logger;
         }
 
         // GET: Event
@@ -73,7 +81,6 @@ namespace CALENDAR_Version_3._0.Controllers
 
         public async Task<IActionResult> Create(EventViewModel vm, IFormCollection form)
         {
-            
                 var name = form["Event.Name"].ToString();
                 var description = form["Event.Description"].ToString();
                 var startTime = DateTime.Parse(form["Event.StartTime"].ToString());
@@ -84,21 +91,33 @@ namespace CALENDAR_Version_3._0.Controllers
                 var location = _dal.GetLocation(locname);
 
                 ReminderFrequency rf = (ReminderFrequency) int.Parse(form["Event.reminderFrequency"]);
-                
-                
-
                 var NTimesFrequency = int.Parse(form["Event.NTimesFrequency"].ToString());
 
-                //var NTimesFrequency = int.Parse(form["Event.NTimesFrequency"].ToString());
-                //smeni go parametarot za reminder frequency
                 var newevent = new Event(name,description,startTime,endTime,location, rf, NTimesFrequency, userid);
 
                 _dal.CreateEvent(newevent);
                 TempData["Alert"] = "Success! You created a new event for: " + form["Event.Name"];
-                return RedirectToAction("Index");
-            
-            
+
+                 
+                newevent.eventReminderDate = CalculateEventReminderDate(newevent);
+                
+                var emails = form["Event.Emails"].ToString(); //comma separated 
+                List<String> emailList = emails.Split(",").ToList();
+                newevent.Emails = emailList;
+
+            return RedirectToAction("Index");
         }
+
+        public static DateTime CalculateEventReminderDate(Event e)
+        {
+            DateTime reminderDate = DateTime.Now;
+            if (e.reminderFrequency.Equals(ReminderFrequency.Daily)) return reminderDate.AddDays(e.NTimesFrequency * 1);
+            else if (e.reminderFrequency.Equals(ReminderFrequency.Weekly)) return reminderDate.AddDays(e.NTimesFrequency * 7);
+            else if (e.reminderFrequency.Equals(ReminderFrequency.Monthly)) return reminderDate.AddMonths(e.NTimesFrequency * 1);
+            else return reminderDate.AddYears(e.NTimesFrequency * 1);
+        }
+
+        
 
         // GET: Event/Edit/5
         
@@ -131,11 +150,9 @@ namespace CALENDAR_Version_3._0.Controllers
         {
             try
             {
-
                 var locname = form["Location"].ToString();
                 var location = _db.Locations.FirstOrDefault(x => x.Name == locname);
 
-                
                 var reminderFrequency = form["ReminderFrequency"];
                 var NTimesFrequency = int.Parse(form["Event.NTimesFrequency"].ToString());
                 var name = form["Event.Name"].ToString();
@@ -149,9 +166,16 @@ namespace CALENDAR_Version_3._0.Controllers
 
                 myevent.UpdateEvent(name, description, startTime, endTime, location, Models.ReminderFrequency.Daily, NTimesFrequency, user);
                 
-
                 _dal.UpdateEvent(myevent);
                 TempData["Alert"] = "Success! You modified an event for: " + form["Event.Name"];
+
+
+                myevent.eventReminderDate = CalculateEventReminderDate(myevent);
+
+                var emails = form["Event.Emails"].ToString(); //comma separated 
+                List<String> emailList = emails.Split(",").ToList();
+                myevent.Emails = emailList;
+
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
@@ -187,6 +211,6 @@ namespace CALENDAR_Version_3._0.Controllers
             _dal.DeleteEvent(id);
             TempData["Alert"] = "You deleted an event.";
             return RedirectToAction(nameof(Index));
-        }
+        }       
     }
 }

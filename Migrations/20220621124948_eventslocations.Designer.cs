@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CALENDAR_Version_3._0.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20220603095000_eventslocations")]
+    [Migration("20220621124948_eventslocations")]
     partial class eventslocations
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -115,6 +115,9 @@ namespace CALENDAR_Version_3._0.Migrations
 
                     b.Property<string>("UserId")
                         .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime>("eventReminderDate")
+                        .HasColumnType("datetime2");
 
                     b.Property<int>("reminderFrequency")
                         .HasColumnType("int");

@@ -1,11 +1,7 @@
 ﻿using CALENDAR_Version_3._0.Models;
-using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace CALENDAR_Version_3._0.Data
 {
@@ -13,6 +9,8 @@ namespace CALENDAR_Version_3._0.Data
     {
         public List<Event> GetEvents();
         public List<Event> GetMyEvents(string userid);
+
+        public List<Event> GetEventsFromDate(DateTime date, string type);
         public Event GetEvent(int id);
         public void CreateEvent(Event newevent);
         public void UpdateEvent(Event newevent);
@@ -46,29 +44,12 @@ namespace CALENDAR_Version_3._0.Data
 
         public void CreateEvent(Event newevent)
         {
-            //var locname = form["Location"].ToString();
-           // var user = db.Users.FirstOrDefault(x => x.Id == form["UserId"].ToString());
-           // var reminderFrequency = form["ReminderFrequency"];
-            //var NTimesFrequency = int.Parse(form["Event.NTimesFrequency"].ToString());
-           // var newevent = new Event(form, db.Locations.FirstOrDefault(x => x.Name == locname), Models.ReminderFrequency.Daily, user);
-            
-            
             db.Events.Add(newevent);
             db.SaveChanges();
         }
 
         public void UpdateEvent(Event newevent) 
         {
-            //var locname = form["Location"].ToString();
-            //  var eventid = int.Parse(form["Event.Id"]);
-            // var myevent = db.Events.FirstOrDefault(x => x.Id == eventid);
-            // var location = db.Locations.FirstOrDefault(x => x.Name == locname);
-            // var user = db.Users.FirstOrDefault(x => x.Id == form["UserId"].ToString());
-            // var reminderFrequency = form["ReminderFrequency"];
-            // var NTimesFrequency = int.Parse(form["Event.NTimesFrequency"].ToString());
-            //myevent.UpdateEvent(form, location, Models.ReminderFrequency.Daily, user);
-            //db.Entry(myevent).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
-
             db.Entry(newevent).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
             db.SaveChanges();
         }
@@ -107,5 +88,15 @@ namespace CALENDAR_Version_3._0.Data
         {
             return db.Locations.Where(x=> x.Name == Name).FirstOrDefault(); 
         }
+
+        public List<Event> GetEventsFromDate(DateTime date, string type)
+        {
+            if(type == "reminder")
+            {
+                return db.Events.Where(x => x.eventReminderDate == date).ToList();
+            }
+            else return db.Events.Where(x => x.StartTime == date).ToList();
+        }
+       
     }
 }

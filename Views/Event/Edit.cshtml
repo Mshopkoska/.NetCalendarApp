@@ -51,6 +51,11 @@
                 <input asp-for="Event.NTimesFrequency" class="form-control" />
             </div>
 
+            <div class="form-group">
+                <label asp-for="Event.Emails" class="control-label">Emails who should get the event reminder (comma separated)</label>
+                <input asp-for="Event.Emails"/>
+                
+            </div>
 
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />

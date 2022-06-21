@@ -114,6 +114,9 @@ namespace CALENDAR_Version_3._0.Migrations
                     b.Property<string>("UserId")
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<DateTime>("eventReminderDate")
+                        .HasColumnType("datetime2");
+
                     b.Property<int>("reminderFrequency")
                         .HasColumnType("int");
 

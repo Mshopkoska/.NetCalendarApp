@@ -15,10 +15,10 @@ namespace CALENDAR_Version_3._0.Controllers
         private readonly IDAL _dal;
         private readonly UserManager<ApplicationUser> _usermanager;
 
-        public LocationController(IDAL idal, UserManager<ApplicationUser> usermanager)
+        public LocationController(IDAL _idal, UserManager<ApplicationUser> _usermanager)
         {
-            _dal = idal;
-            _usermanager = usermanager;
+            this._dal = _idal;
+            this._usermanager = _usermanager;
         }
 
         // GET: Location

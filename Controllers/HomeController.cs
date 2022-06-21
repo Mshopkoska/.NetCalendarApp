@@ -16,11 +16,11 @@ namespace CALENDAR_Version_3._0.Controllers
         private readonly IDAL _idal;
         private readonly UserManager<ApplicationUser> _usermanager;
 
-        public HomeController(ILogger<HomeController> logger, IDAL idal, UserManager<ApplicationUser> usermanager)
+        public HomeController(ILogger<HomeController> _logger, IDAL _idal, UserManager<ApplicationUser> _usermanager)
         {
-            _logger = logger;
-            _idal = idal;
-            _usermanager = usermanager;
+            this._logger = _logger;
+            this._idal = _idal;
+            this._usermanager = _usermanager;
         }
 
         public IActionResult Index()

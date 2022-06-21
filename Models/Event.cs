@@ -1,8 +1,7 @@
-﻿using Microsoft.AspNetCore.Http;
-using System;
+﻿using System;
 using System.ComponentModel.DataAnnotations;
-using Microsoft.AspNetCore.Mvc.Rendering;
-
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace CALENDAR_Version_3._0.Models
 {
@@ -24,6 +23,11 @@ namespace CALENDAR_Version_3._0.Models
         [Required]
         public int NTimesFrequency { get; set; }
 
+        public DateTime eventReminderDate { get; set; }
+
+        [NotMapped]
+        public List<String> Emails { get; set; } 
+
         //Relational data
         [Required]
         public virtual Location Location { get; set; }
@@ -42,6 +46,8 @@ namespace CALENDAR_Version_3._0.Models
             this.NTimesFrequency = NTimesFrequency;
 
             Location = location;
+
+            this.eventReminderDate = new DateTime();
         }
 
         public void UpdateEvent(string Name, string Description, DateTime StartTime, DateTime EndTime, Location location, ReminderFrequency reminderFrequency, int NTimesFrequency, ApplicationUser user)
@@ -56,6 +62,7 @@ namespace CALENDAR_Version_3._0.Models
             this.NTimesFrequency = NTimesFrequency;
 
             Location = location;
+            this.eventReminderDate = new DateTime();
         }
 
         public Event()

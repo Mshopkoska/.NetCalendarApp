@@ -8,6 +8,8 @@ using CALENDAR_Version_3._0.Models;
 using Microsoft.Extensions.Hosting;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using CALENDAR_Version_3._0.Services;
+using FluentScheduler;
+using CALENDAR_Version_3._0.Services.ReminderEmails;
 
 
 namespace CALENDAR_Version_3._0
@@ -59,6 +61,8 @@ namespace CALENDAR_Version_3._0
 
             app.UseAuthentication();
             app.UseAuthorization();
+
+            JobManager.Initialize(new JobRegistry());
 
             app.UseEndpoints(endpoints =>
             {

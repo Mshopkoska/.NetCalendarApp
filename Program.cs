@@ -1,11 +1,8 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+
 
 namespace CALENDAR_Version_3._0
 {
@@ -22,5 +19,12 @@ namespace CALENDAR_Version_3._0
                 {
                     webBuilder.UseStartup<Startup>();
                 });
+
+
+        /*private static void ConfigureServicesDelegate(HostBuilderContext hostingContext, IServiceCollection services)
+        {
+            var serviceProvider = services.BuildServiceProvider();
+            JobManager.Initialize(new JobRegistry(serviceProvider));
+        }*/
     }
 }
